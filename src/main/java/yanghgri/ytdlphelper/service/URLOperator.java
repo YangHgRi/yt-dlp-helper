@@ -1,0 +1,31 @@
+package yanghgri.ytdlphelper.service;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class URLOperator {
+    private static final Pattern regexPattern = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()!@:%_+.~#?&/=]*)");
+
+    /**
+     * 读取文件内容，提取其中的url，组成url集合，返回给调用方
+     *
+     * @param path 路径
+     */
+    public static List<String> extract(File path) {
+        List<String> originalFileContent = FileOperator.readOriginalFileContentAsList(path);
+
+        List<String> newFileContent = new ArrayList<>();
+
+        originalFileContent.forEach(line -> {
+            Matcher matcher = regexPattern.matcher(line);
+
+            while (matcher.find()) {
+                newFileContent.add(matcher.group());
+            }
+        });
+        return newFileContent;
+    }
+}

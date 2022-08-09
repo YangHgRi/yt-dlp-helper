@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class URLOperator {
     private static final Pattern regexPattern = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()!@:%_+.~#?&/=]*)");
@@ -18,7 +19,7 @@ public class URLOperator {
         List<String> originalFileContent = FileOperator.readAsStringList(path);
 
         List<String> newFileContent = new ArrayList<>();
-
+        //模式判断，提取url
         originalFileContent.forEach(line -> {
             Matcher matcher = regexPattern.matcher(line);
 
@@ -26,6 +27,7 @@ public class URLOperator {
                 newFileContent.add(matcher.group());
             }
         });
-        return newFileContent;
+        //返回去重后的url
+        return newFileContent.stream().distinct().collect(Collectors.toList());
     }
 }

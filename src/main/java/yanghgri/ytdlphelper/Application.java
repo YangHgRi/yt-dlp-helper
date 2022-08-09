@@ -14,6 +14,15 @@ public class Application {
         Map<String, String> argsMap = ArgsParser.parse2Map(args);
         //参数初始化和校验
         String mode = argsMap.get("m");
+        //获取资源url
+        String url = argsMap.get("url");
+        //合集ID,是合集链接中的一部分
+        String playlistID = argsMap.get("playListID");
+        //合集视频数
+        Integer playlistCount = Integer.valueOf(argsMap.get("playlistCount"));
+        //当前视频在和集中索引
+        Integer playlistIndex = Integer.valueOf(argsMap.get("playlistIndex"));
+
         if (mode == null) {
             throw new IllegalArgumentException("参数m不能为空，请以m=xxx格式填入，参数分隔符是空格！");
         }
@@ -39,17 +48,50 @@ public class Application {
             case "deleteAll":
                 FileOperator.deleteAll(file);
                 System.out.println("\n");
-                System.out.println("YT-DLP-Helper: 已下载链接清除成功！");
+                System.out.println("YT-DLP-Helper: 全部链接清除成功！");
                 break;
-            case "delOne":
-            case "deleteOne":
-                FileOperator.deleteOneLine(file);
-                System.out.println("\n");
-                System.out.println("YT-DLP-Helper: 已删除该链接！");
-                System.out.println("\n");
+            case "delFirst":
+            case "deleteFirst":
+                if (isPlayList(playlistID, playlistCount, playlistIndex)) {
+                    if (isLastInPlayList(playlistCount, playlistIndex)) {
+                        FileOperator.deleteFirstLine(file);
+                        System.out.println("\n");
+                        System.out.println("YT-DLP-Helper: 已删除首行链接！");
+                        System.out.println("\n");
+                    }
+                } else {
+                    FileOperator.deleteFirstLine(file);
+                    System.out.println("\n");
+                    System.out.println("YT-DLP-Helper: 已删除首行链接！");
+                    System.out.println("\n");
+                }
+                break;
+            case "delURL":
+            case "deleteURL":
+                if (isPlayList(playlistID, playlistCount, playlistIndex)) {
+                    if (isLastInPlayList(playlistCount, playlistIndex)) {
+                        FileOperator.deleteByURL(file, url);
+                        System.out.println("\n");
+                        System.out.println("YT-DLP-Helper: 已删除 " + url + " 链接！");
+                        System.out.println("\n");
+                    }
+                } else {
+                    FileOperator.deleteByURL(file, url);
+                    System.out.println("\n");
+                    System.out.println("YT-DLP-Helper: 已删除 " + url + " 链接！");
+                    System.out.println("\n");
+                }
                 break;
             default:
                 throw new IllegalArgumentException("参数m目前只支持ext（extract）或del（delete）！");
         }
+    }
+
+    public static boolean isPlayList(String playlistID, Integer playlistCount, Integer playlistIndex) {
+        return playlistID != null && !playlistID.isEmpty() && playlistCount != null && playlistIndex != null;
+    }
+
+    public static boolean isLastInPlayList(Integer playlistCount, Integer playlistIndex) {
+        return playlistCount.equals(playlistIndex);
     }
 }

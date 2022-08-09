@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileOperator {
     /**
@@ -42,13 +43,19 @@ public class FileOperator {
         writeByStringList(path, Collections.emptyList());
     }
 
-    public static void deleteOneLine(File path) {
-        List<String> newContent = readAsStringList(path);
-        newContent.remove(0);
+    public static void deleteFirstLine(File path) {
+        List<String> stringList = readAsStringList(path);
+        stringList.remove(0);
         try (FileWriter fileWriter = new FileWriter(path); BufferedWriter writer = new BufferedWriter(fileWriter)) {
-            writer.write(String.join("\n", newContent));
+            writer.write(String.join("\n", stringList));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void deleteByURL(File path, String targetURL) {
+        List<String> stringList = readAsStringList(path);
+        stringList = stringList.stream().filter(s -> !s.contains(targetURL)).collect(Collectors.toList());
+        writeByStringList(path, stringList);
     }
 }

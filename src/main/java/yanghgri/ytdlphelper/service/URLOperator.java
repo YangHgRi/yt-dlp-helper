@@ -15,7 +15,7 @@ public class URLOperator {
      * @param path 路径
      */
     public static List<String> extract(File path) {
-        List<String> originalFileContent = FileOperator.readOriginalFileContentAsList(path);
+        List<String> originalFileContent = FileOperator.readAsStringList(path);
 
         List<String> newFileContent = new ArrayList<>();
 

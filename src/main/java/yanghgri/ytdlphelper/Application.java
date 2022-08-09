@@ -24,18 +24,30 @@ public class Application {
             throw new IllegalArgumentException("参数p不能为空，请以p=xxx格式填入，参数分隔符是空格！");
         }
         //按照m值决定执行模式
-        if (mode.equals("ext") || mode.equals("extract")) {
-            List<String> extractResult = URLOperator.extract(file);
-            FileOperator.writeNewFileContent(file, extractResult);
-            System.out.println("YT-DLP-Helper: 链接提取成功！");
-            System.out.println(String.join(", ", extractResult));
-            System.out.println("\n");
-        } else if (mode.equals("del") || mode.equals("delete")) {
-            FileOperator.deleteAll(file);
-            System.out.println("\n");
-            System.out.println("YT-DLP-Helper: 已下载链接清除成功！");
-        } else {
-            throw new IllegalArgumentException("参数m目前只支持ext（extract）或del（delete）！");
+        switch (mode) {
+            case "ext":
+            case "extract":
+                List<String> extractResult = URLOperator.extract(file);
+                FileOperator.writeByStringList(file, extractResult);
+                System.out.println("YT-DLP-Helper: 链接提取成功！");
+                System.out.println(String.join("\n", extractResult));
+                System.out.println("\n");
+                break;
+            case "delAll":
+            case "deleteAll":
+                FileOperator.deleteAll(file);
+                System.out.println("\n");
+                System.out.println("YT-DLP-Helper: 已下载链接清除成功！");
+                break;
+            case "delOne":
+            case "deleteOne":
+                FileOperator.deleteOneLine(file);
+                System.out.println("\n");
+                System.out.println("YT-DLP-Helper: 已删除该链接！");
+                System.out.println("\n");
+                break;
+            default:
+                throw new IllegalArgumentException("参数m目前只支持ext（extract）或del（delete）！");
         }
     }
 }

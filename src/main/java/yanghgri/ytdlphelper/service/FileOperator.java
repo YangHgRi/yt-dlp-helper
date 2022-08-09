@@ -12,7 +12,7 @@ public class FileOperator {
      * @param path 路径
      * @return {@link List}<{@link String}>
      */
-    public static List<String> readOriginalFileContentAsList(File path) {
+    public static List<String> readAsStringList(File path) {
         try (FileReader fileReader = new FileReader(path); BufferedReader reader = new BufferedReader(fileReader)) {
             List<String> originalURLList = new ArrayList<>();
             reader.lines().forEach(
@@ -30,7 +30,7 @@ public class FileOperator {
      * @param path       路径
      * @param newContent 新内容
      */
-    public static void writeNewFileContent(File path, List<String> newContent) {
+    public static void writeByStringList(File path, List<String> newContent) {
         try (FileWriter fileWriter = new FileWriter(path); BufferedWriter writer = new BufferedWriter(fileWriter)) {
             writer.write(String.join("\n", newContent));
         } catch (IOException e) {
@@ -39,6 +39,16 @@ public class FileOperator {
     }
 
     public static void deleteAll(File path) {
-        writeNewFileContent(path, Collections.emptyList());
+        writeByStringList(path, Collections.emptyList());
+    }
+
+    public static void deleteOneLine(File path) {
+        List<String> newContent = readAsStringList(path);
+        newContent.remove(0);
+        try (FileWriter fileWriter = new FileWriter(path); BufferedWriter writer = new BufferedWriter(fileWriter)) {
+            writer.write(String.join("\n", newContent));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

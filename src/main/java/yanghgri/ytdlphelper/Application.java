@@ -18,10 +18,19 @@ public class Application {
         String url = argsMap.get("url");
         //合集ID,是合集链接中的一部分
         String playlistID = argsMap.get("playListID");
+        if (playlistID.equals("NA")) {
+            playlistID = null;
+        }
         //合集视频数
-        Integer playlistCount = Integer.valueOf(argsMap.get("playlistCount"));
+        String playlistCount = argsMap.get("playlistCount");
+        if (playlistCount.equals("NA")) {
+            playlistCount = null;
+        }
         //当前视频在和集中索引
-        Integer playlistIndex = Integer.valueOf(argsMap.get("playlistIndex"));
+        String playlistIndex = argsMap.get("playlistIndex");
+        if (playlistIndex.equals("NA")) {
+            playlistIndex = null;
+        }
 
         if (mode == null) {
             throw new IllegalArgumentException("参数m不能为空，请以m=xxx格式填入，参数分隔符是空格！");
@@ -87,11 +96,11 @@ public class Application {
         }
     }
 
-    public static boolean isPlayList(String playlistID, Integer playlistCount, Integer playlistIndex) {
-        return playlistID != null && !playlistID.isEmpty() && playlistCount != null && playlistIndex != null;
+    public static boolean isPlayList(String playlistID, String playlistCount, String playlistIndex) {
+        return playlistID != null && playlistCount != null && playlistIndex != null;
     }
 
-    public static boolean isLastInPlayList(Integer playlistCount, Integer playlistIndex) {
+    public static boolean isLastInPlayList(String playlistCount, String playlistIndex) {
         return playlistCount.equals(playlistIndex);
     }
 }

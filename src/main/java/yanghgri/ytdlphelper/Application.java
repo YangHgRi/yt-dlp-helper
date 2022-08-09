@@ -70,7 +70,7 @@ public class Application {
             case "deleteURL":
                 if (isPlayList(playlistID, playlistCount, playlistIndex)) {
                     if (isLastInPlayList(playlistCount, playlistIndex)) {
-                        FileOperator.deleteByURL(file, url);
+                        FileOperator.deleteByURL(file, playlistID);
                         System.out.println("\n");
                         System.out.println("YT-DLP-Helper: 已删除 " + url + " 链接！");
                         System.out.println("\n");

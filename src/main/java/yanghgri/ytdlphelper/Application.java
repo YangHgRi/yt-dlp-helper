@@ -29,7 +29,9 @@ public class Application {
             case "extract":
                 List<String> extractResult = URLOperator.extract(file);
                 FileOperator.writeByStringList(file, extractResult);
+                System.out.println("\n");
                 System.out.println("YT-DLP-Helper: 链接提取成功！");
+                System.out.println("\n");
                 System.out.println(String.join("\n", extractResult));
                 System.out.println("\n");
                 break;

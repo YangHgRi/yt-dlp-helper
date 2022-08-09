@@ -12,7 +12,7 @@ public class ArgsParser {
         Map<String, String> argsMap = new HashMap<>(argsList.size());
 
         argsList.forEach(arg -> {
-            int indexOfEqual = arg.lastIndexOf("=");
+            int indexOfEqual = arg.indexOf("=");
 
             if (indexOfEqual != -1) {
                 //等号左边

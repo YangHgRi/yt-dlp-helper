@@ -18,17 +18,17 @@ public class Application {
         String url = argsMap.get("url");
         //合集ID,是合集链接中的一部分
         String playlistID = argsMap.get("playListID");
-        if (playlistID.equals("NA")) {
+        if (playlistID != null && playlistID.equals("NA")) {
             playlistID = null;
         }
         //合集视频数
         String playlistCount = argsMap.get("playlistCount");
-        if (playlistCount.equals("NA")) {
+        if (playlistCount != null && playlistCount.equals("NA")) {
             playlistCount = null;
         }
         //当前视频在和集中索引
         String playlistIndex = argsMap.get("playlistIndex");
-        if (playlistIndex.equals("NA")) {
+        if (playlistIndex != null && playlistIndex.equals("NA")) {
             playlistIndex = null;
         }
 
@@ -81,10 +81,11 @@ public class Application {
                     if (isLastInPlayList(playlistCount, playlistIndex)) {
                         FileOperator.deleteByURL(file, playlistID);
                         System.out.println("\n");
-                        System.out.println("YT-DLP-Helper: 已删除 " + url + " 链接！");
+                        System.out.println("YT-DLP-Helper: 已删除ID为 " + playlistID + " 的合集链接！");
                         System.out.println("\n");
                     }
                 } else {
+                    System.out.println(url);
                     FileOperator.deleteByURL(file, url);
                     System.out.println("\n");
                     System.out.println("YT-DLP-Helper: 已删除 " + url + " 链接！");

@@ -47,32 +47,24 @@ public class Application {
             case "extract":
                 List<String> extractResult = URLOperator.extract(file);
                 FileOperator.writeByStringList(file, extractResult);
-                System.out.println("\n");
-                System.out.println("YT-DLP-Helper: 链接提取成功！");
-                System.out.println("\n");
-                System.out.println(String.join("\n", extractResult));
-                System.out.println("\n");
+                System.out.println("\nYT-DLP-Helper: 链接提取成功！\n");
+                System.out.println(String.join("\n", extractResult) + "\n");
                 break;
             case "delAll":
             case "deleteAll":
                 FileOperator.deleteAll(file);
-                System.out.println("\n");
-                System.out.println("YT-DLP-Helper: 全部链接清除成功！");
+                System.out.println("\nYT-DLP-Helper: 全部链接清除成功！");
                 break;
             case "delFirst":
             case "deleteFirst":
                 if (isPlayList(playlistID, playlistCount, playlistIndex)) {
                     if (isLastInPlayList(playlistCount, playlistIndex)) {
                         FileOperator.deleteFirstLine(file);
-                        System.out.println("\n");
-                        System.out.println("YT-DLP-Helper: 已删除首行链接！");
-                        System.out.println("\n");
+                        System.out.println("\nYT-DLP-Helper: 已删除首行链接！\n");
                     }
                 } else {
                     FileOperator.deleteFirstLine(file);
-                    System.out.println("\n");
-                    System.out.println("YT-DLP-Helper: 已删除首行链接！");
-                    System.out.println("\n");
+                    System.out.println("\nYT-DLP-Helper: 已删除首行链接！\n");
                 }
                 break;
             case "delURL":
@@ -80,16 +72,11 @@ public class Application {
                 if (isPlayList(playlistID, playlistCount, playlistIndex)) {
                     if (isLastInPlayList(playlistCount, playlistIndex)) {
                         FileOperator.deleteByURL(file, playlistID);
-                        System.out.println("\n");
-                        System.out.println("YT-DLP-Helper: 已删除ID为 " + playlistID + " 的合集链接！");
-                        System.out.println("\n");
+                        System.out.println("\nYT-DLP-Helper: 已删除ID为 " + playlistID + " 的合集的链接！\n");
                     }
                 } else {
-                    System.out.println(url);
                     FileOperator.deleteByURL(file, url);
-                    System.out.println("\n");
-                    System.out.println("YT-DLP-Helper: 已删除 " + url + " 链接！");
-                    System.out.println("\n");
+                    System.out.println("\nYT-DLP-Helper: 已删除 " + url + " 链接！\n");
                 }
                 break;
             default:

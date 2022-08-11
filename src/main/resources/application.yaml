@@ -1,0 +1,14 @@
+spring:
+  main:
+    banner-mode: off
+    log-startup-info: false
+yt-dlp:
+  program-location: 'C:\Users\YangHgRi\AppData\Local\Programs\Python\Python310\Scripts\yt-dlp.exe'
+  config-location: 'D:\MediaLib\yt-dlp.conf'
+  url-list:
+    -youtube: 'D:\MediaLib\url-list\youtube-list.txt'
+    -bilibili: 'D:\MediaLib\url-list\bilibili-list.txt'
+    -pornhub: 'D:\MediaLib\url-list\pornhub-list.txt'
+    -game: 'D:\MediaLib\url-list\game-list.txt'
+    -asmr: 'D:\MediaLib\url-list\asmr-list.txt'
+    -asmr_audio: 'D:\MediaLib\url-list\asmr-audio-list.txt'

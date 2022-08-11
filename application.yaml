@@ -1,3 +1,10 @@
+spring:
+  main:
+    # 关闭启动横幅
+    banner-mode: off
+    # 关闭启动流程日志
+    log-startup-info: false
+# 配置yt-dlp-helper
 yt-dlp:
   # yt-dlp程序路径
   program-location: 'C:\Users\YangHgRi\AppData\Local\Programs\Python\Python310\Scripts\yt-dlp.exe'

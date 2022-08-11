@@ -1,10 +1,15 @@
 spring:
   main:
+    # 关闭启动横幅
     banner-mode: off
+    # 关闭启动流程日志
     log-startup-info: false
 yt-dlp:
+  # yt-dlp程序路径
   program-location: 'C:\Users\YangHgRi\AppData\Local\Programs\Python\Python310\Scripts\yt-dlp.exe'
+  # 配置文件路径
   config-location: 'D:\MediaLib\yt-dlp.conf'
+  # 批量下载url列表路径
   url-list:
     -youtube: 'D:\MediaLib\url-list\youtube-list.txt'
     -bilibili: 'D:\MediaLib\url-list\bilibili-list.txt'
@@ -12,6 +17,7 @@ yt-dlp:
     -game: 'D:\MediaLib\url-list\game-list.txt'
     -asmr: 'D:\MediaLib\url-list\asmr-list.txt'
     -asmr_audio: 'D:\MediaLib\url-list\asmr-audio-list.txt'
+  # yt-dlp工作目录
   work-dir:
     -youtube: 'D:\MediaLib\数一数二\油管'
     -bilibili: 'D:\MediaLib\数一数二\阿B'

@@ -100,6 +100,12 @@ public class YTDLPHelperApplication {
             case "getWorkDir":
                 System.out.println(getWorkDirByOrdinal(application.getTargetListIndex(), properties));
                 break;
+            case "getProgram":
+                System.out.println(properties.getProgramLocation());
+                break;
+            case "getConfig":
+                System.out.println(properties.getConfigLocation());
+                break;
             case "delAll":
                 FileOperator.deleteAll(file);
                 System.out.println("\nYT-DLP-Helper: 全部链接清除成功！");

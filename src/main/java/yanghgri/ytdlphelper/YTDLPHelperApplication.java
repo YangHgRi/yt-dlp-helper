@@ -61,18 +61,23 @@ public class YTDLPHelperApplication {
         return playlistCount.equals(playlistIndex);
     }
 
-    public static String getListPathByListOrdinal(String index, YTDLPProperties properties) {
+    public static String getMapKeyByListOrdinal(String ordinal) {
         //按照输入参数对应枚举次序获取枚举对象，e.g：1 -> YOUTUBE
-        URLListType listType = Arrays.stream(URLListType.values()).filter(urlListType -> urlListType.ordinal() == (Integer.parseInt(index)) - 1).collect(Collectors.toList()).get(0);
+        URLListType listType = Arrays.stream(URLListType.values()).filter(urlListType -> urlListType.ordinal() == (Integer.parseInt(ordinal)) - 1).collect(Collectors.toList()).get(0);
         if (listType == null) {
             throw new IllegalArgumentException("参数t不能为空或超出给定范围，请以--t=xxx格式输入，参数分隔符是空格！");
         }
-        //获取枚举名
-        String name = listType.getName();
-        //转为小写，YOUTUBE -> youtube
-        name = name.toLowerCase();
+        //获取枚举名,转为小写，YOUTUBE -> youtube
+        return listType.getName().toLowerCase();
+    }
+
+    public static String getListPathByOrdinal(String ordinal, YTDLPProperties properties) {
         //获取配置文件中与youtube对应配置项值，获得file path
-        return properties.getUrlList().get(name);
+        return properties.getUrlList().get(getMapKeyByListOrdinal(ordinal));
+    }
+
+    public static String getWorkDirByOrdinal(String ordinal, YTDLPProperties properties) {
+        return properties.getWorkDir().get(getMapKeyByListOrdinal(ordinal));
     }
 
     public void operateURLListFileByMode(Resource resource, YTDLPHelperApplication application, YTDLPProperties properties) {
@@ -90,8 +95,10 @@ public class YTDLPHelperApplication {
                 System.out.println(String.join("\n", extractResult) + "\n");
                 break;
             case "getPath":
-                String filePath = getListPathByListOrdinal(application.getTargetListIndex(), properties);
-                System.out.println(filePath);
+                System.out.println(getListPathByOrdinal(application.getTargetListIndex(), properties));
+                break;
+            case "getWorkDir":
+                System.out.println(getWorkDirByOrdinal(application.getTargetListIndex(), properties));
                 break;
             case "delAll":
                 FileOperator.deleteAll(file);

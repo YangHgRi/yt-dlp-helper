@@ -11,4 +11,5 @@ public class YTDLPProperties {
     private String programLocation;
     private String configLocation;
     private Map<String, String> urlList;
+    private Map<String, String> workDir;
 }

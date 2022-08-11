@@ -12,3 +12,10 @@ yt-dlp:
     -game: 'D:\MediaLib\url-list\game-list.txt'
     -asmr: 'D:\MediaLib\url-list\asmr-list.txt'
     -asmr_audio: 'D:\MediaLib\url-list\asmr-audio-list.txt'
+  work-dir:
+    -youtube: 'D:\MediaLib\数一数二\油管'
+    -bilibili: 'D:\MediaLib\数一数二\阿B'
+    -pornhub: 'D:\MediaLib\Pornhub'
+    -game: 'D:\MediaLib\游戏视频'
+    -asmr: 'D:\ASMR'
+    -asmr_audio: 'D:\ASMR'

@@ -24,7 +24,7 @@ public class YTDLPHelperApplication {
     @Value("${p:#{null}}")
     private String filePath;
     @Value("${t:#{null}}")
-    private String targetListIndex;
+    private String keyOrdinal;
     @Value("${url:#{null}}")
     private String originalURL;
     @Value("${listID:#{null}}")
@@ -71,7 +71,6 @@ public class YTDLPHelperApplication {
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("参数t不能超出给定范围，请以--t=xxx格式输入，参数分隔符是空格！");
         }
-        //获取枚举名,转为小写，YOUTUBE -> youtube
         return key;
     }
 
@@ -102,16 +101,19 @@ public class YTDLPHelperApplication {
                 System.out.println(String.join("\n", extractResult) + "\n");
                 break;
             case "getPath":
-                System.out.println(getListPathByOrdinal(application.getTargetListIndex(), properties));
+                System.out.println(getListPathByOrdinal(application.getKeyOrdinal(), properties));
                 break;
             case "getWorkDir":
-                System.out.println(getWorkDirByOrdinal(application.getTargetListIndex(), properties));
+                System.out.println(getWorkDirByOrdinal(application.getKeyOrdinal(), properties));
                 break;
             case "getProgram":
                 System.out.println(properties.getProgramLocation());
                 break;
             case "getConfig":
                 System.out.println(properties.getConfigLocation());
+                break;
+            case "isAudioOnly":
+                System.out.println(checkAudioOnly(application.getKeyOrdinal(), properties));
                 break;
             case "delAll":
                 FileOperator.deleteAll(file);
@@ -176,5 +178,9 @@ public class YTDLPHelperApplication {
         for (int i = 0; i < keyList.size(); i++) {
             System.out.println(tab + i + " -> " + keyList.get(i));
         }
+    }
+
+    public static int checkAudioOnly(String ordinal, YTDLPProperties properties) {
+        return StringUtils.endsWith(getMapKeyByListOrdinal(ordinal, properties), "_audio") ? 1 : 0;
     }
 }

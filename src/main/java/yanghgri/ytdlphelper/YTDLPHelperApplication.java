@@ -8,11 +8,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import yanghgri.ytdlphelper.config.YTDLPProperties;
-import yanghgri.ytdlphelper.model.Resource;
+import yanghgri.ytdlphelper.model.Key;
+import yanghgri.ytdlphelper.model.Playlist;
 import yanghgri.ytdlphelper.service.FileOperator;
 import yanghgri.ytdlphelper.service.URLOperator;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -22,11 +24,11 @@ public class YTDLPHelperApplication {
     @Value("${m:#{null}}")
     private String mode;
     @Value("${p:#{null}}")
-    private String filePath;
+    private String urlList;
     @Value("${t:#{null}}")
-    private String keyOrdinal;
+    private String ordinal;
     @Value("${url:#{null}}")
-    private String originalURL;
+    private String url;
     @Value("${listID:#{null}}")
     private String playListID;
     @Value("${listCount:#{null}}")
@@ -39,15 +41,46 @@ public class YTDLPHelperApplication {
         YTDLPHelperApplication application = applicationContext.getBean(YTDLPHelperApplication.class);
         YTDLPProperties properties = applicationContext.getBean(YTDLPProperties.class);
 
-        Resource resource = new Resource(application.getMode(), null, application.getOriginalURL(), application.getPlayListID(), application.getPlayListCount(), application.getPlayListIndex());
-        String filePath = application.getFilePath();
-        if (StringUtils.isNotEmpty(filePath)) {
-            resource.setFilePath(new File(filePath));
+        String mode = application.getMode();
+        if (StringUtils.isEmpty(mode)) {
+            throw new IllegalArgumentException("参数m不能为空，请以--m=xxx格式输入，参数分隔符是空格！");
         }
 
-        application.validate(resource);
-
-        application.operateURLListFileByMode(resource, application, properties);
+        switch (mode) {
+            case "getKeys":
+                outputSupportKeysName(properties);
+                break;
+            case "init":
+                Key key = getKeyByOrdinal(application, properties);
+                String audioOnly = checkAudioOnly(key.getName());
+                System.out.print(String.join("|", new String[]{key.getUrlList(), key.getWorkDir(), properties.getConfigLocation(), audioOnly}));
+                break;
+            case "ext":
+                File extTarget = new File(application.getUrlList());
+                List<String> extractResult = URLOperator.extract(extTarget);
+                FileOperator.writeByStringList(extTarget, extractResult);
+                System.out.println("\n链接提取成功！\n");
+                System.out.println(String.join("\n", extractResult) + "\n");
+                break;
+            case "del":
+                File delTarget = new File(application.getUrlList());
+                String url = application.getUrl();
+                String playListID = application.getPlayListID();
+                String playListCount = application.getPlayListCount();
+                String playListIndex = application.getPlayListIndex();
+                Playlist playlist = new Playlist(playListID, playListCount, playListIndex);
+                setNAToNull(playlist);
+                if (isInPlayList(playListID, playListCount, playListIndex)) {
+                    if (isLastInPlayList(playListCount, playListIndex)) {
+                        FileOperator.deleteByURL(delTarget, url);
+                    }
+                } else {
+                    FileOperator.deleteByURL(delTarget, url);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("参数m目前只支持getKeys/init/del！");
+        }
     }
 
     public static boolean isInPlayList(String playlistID, String playlistCount, String playlistIndex) {
@@ -58,129 +91,60 @@ public class YTDLPHelperApplication {
         return playlistCount.equals(playlistIndex);
     }
 
-    public static String getMapKeyByListOrdinal(String ordinal, YTDLPProperties properties) {
-        int intOrdinal;
+    public static Key getKeyByOrdinal(YTDLPHelperApplication application, YTDLPProperties properties) {
+        int ordinal;
         try {
-            intOrdinal = Integer.parseInt(ordinal);
+            ordinal = Integer.parseInt(application.getOrdinal());
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("参数t的值必须为数字且非空，请以--t=xxx格式输入，参数分隔符是空格！");
         }
-        String key;
+        String[] keyUrlListWorkDir;
         try {
-            key = properties.getKeyList().get(intOrdinal);
+            keyUrlListWorkDir = properties.getKeyList().get(ordinal).split("\\|");
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalArgumentException("参数t不能超出给定范围，请以--t=xxx格式输入，参数分隔符是空格！");
         }
-        return key;
+
+        String keyName = keyUrlListWorkDir[0];
+        String urlList = keyUrlListWorkDir[1];
+        String workDir = keyUrlListWorkDir[2];
+
+        return new Key(keyName, urlList, workDir);
     }
 
-    public static String getListPathByOrdinal(String ordinal, YTDLPProperties properties) {
-        //获取配置文件中与youtube对应配置项值，获得file path
-        return properties.getUrlList().get(getMapKeyByListOrdinal(ordinal, properties));
-    }
-
-    public static String getWorkDirByOrdinal(String ordinal, YTDLPProperties properties) {
-        return properties.getWorkDir().get(getMapKeyByListOrdinal(ordinal, properties));
-    }
-
-    public void operateURLListFileByMode(Resource resource, YTDLPHelperApplication application, YTDLPProperties properties) {
-        File file = resource.getFilePath();
-        String originalURL = resource.getOriginalURL();
-        String playListID = resource.getPlayListID();
-        String playListCount = resource.getPlayListCount();
-        String playListIndex = resource.getPlayListIndex();
-        //按照m值决定执行模式
-        switch (resource.getMode()) {
-            case "getKeys":
-                outputSupportKeys(properties);
-                break;
-            case "ext":
-                List<String> extractResult = URLOperator.extract(file);
-                FileOperator.writeByStringList(file, extractResult);
-                System.out.println("\n链接提取成功！\n");
-                System.out.println(String.join("\n", extractResult) + "\n");
-                break;
-            case "getPath":
-                System.out.println(getListPathByOrdinal(application.getKeyOrdinal(), properties));
-                break;
-            case "getWorkDir":
-                System.out.println(getWorkDirByOrdinal(application.getKeyOrdinal(), properties));
-                break;
-            case "getProgram":
-                System.out.println(properties.getProgramLocation());
-                break;
-            case "getConfig":
-                System.out.println(properties.getConfigLocation());
-                break;
-            case "isAudioOnly":
-                System.out.println(checkAudioOnly(application.getKeyOrdinal(), properties));
-                break;
-            case "delAll":
-                FileOperator.deleteAll(file);
-                System.out.println("\n全部链接清除成功！");
-                break;
-            case "delFirst":
-                if (isInPlayList(playListID, playListCount, playListIndex)) {
-                    if (isLastInPlayList(playListCount, playListIndex)) {
-                        FileOperator.deleteFirstLine(file);
-                        System.out.println("\n已删除首行链接！\n");
-                    }
-                } else {
-                    FileOperator.deleteFirstLine(file);
-                    System.out.println("\n已删除首行链接！\n");
-                }
-                break;
-            case "delURL":
-                if (isInPlayList(playListID, playListCount, playListIndex)) {
-                    if (isLastInPlayList(playListCount, playListIndex)) {
-                        FileOperator.deleteByURL(file, playListID);
-                        System.out.println("\n已删除ID为 " + playListID + " 的合集的链接！\n");
-                    }
-                } else {
-                    FileOperator.deleteByURL(file, originalURL);
-                    System.out.println("\n已删除 " + originalURL + " 链接！\n");
-                }
-                break;
-            default:
-                throw new IllegalArgumentException("参数m目前只支持ext/delAll/delFirst/delURL！");
-        }
-    }
-
-    public void validate(Resource resource) {
-        //参数初始化和校验
-        String mode = resource.getMode();
-        if (StringUtils.isEmpty(mode)) {
-            throw new IllegalArgumentException("参数m不能为空，请以--m=xxx格式输入，参数分隔符是空格！");
-        }
+    public static void setNAToNull(Playlist playlist) {
         //yt-dlp当参数为空时，输出模板默认以"NA"作为占位符传入，很阴险啊
         final String placeholder = "NA";
         //合集ID,是合集链接中的一部分
-        String playlistID = resource.getPlayListID();
+        String playlistID = playlist.getPlaylistID();
         if (placeholder.equals(playlistID)) {
-            resource.setPlayListID(null);
+            playlist.setPlaylistID(null);
         }
         //合集视频数
-        String playlistCount = resource.getPlayListCount();
+        String playlistCount = playlist.getPlaylistCount();
         if (placeholder.equals(playlistCount)) {
-            resource.setPlayListCount(null);
+            playlist.setPlaylistCount(null);
         }
         //当前视频在合集中索引
-        String playlistIndex = resource.getPlayListIndex();
+        String playlistIndex = playlist.getPlaylistIndex();
         if (placeholder.equals(playlistIndex)) {
-            resource.setPlayListIndex(null);
+            playlist.setPlaylistIndex(null);
         }
     }
 
-    public static void outputSupportKeys(YTDLPProperties properties) {
+    public static void outputSupportKeysName(YTDLPProperties properties) {
         final String tab = "\t";
         List<String> keyList = properties.getKeyList();
+        List<String> keyNameList = new ArrayList<>();
+        keyList.forEach(key -> keyNameList.add(key.split("\\|")[0]));
         System.out.println("\n当前支持关键字与其序号：");
         for (int i = 0; i < keyList.size(); i++) {
-            System.out.println(tab + i + " -> " + keyList.get(i));
+            System.out.println(tab + i + " -> " + keyNameList.get(i));
         }
+        System.out.print("目标关键字序号：");
     }
 
-    public static int checkAudioOnly(String ordinal, YTDLPProperties properties) {
-        return StringUtils.endsWith(getMapKeyByListOrdinal(ordinal, properties), "_audio") ? 1 : 0;
+    public static String checkAudioOnly(String keyName) {
+        return StringUtils.endsWith(keyName, "_audio") ? "1" : "0";
     }
 }

@@ -1,0 +1,6 @@
+spring:
+  main:
+    # 关闭启动横幅
+    banner-mode: off
+    # 关闭启动流程日志
+    log-startup-info: false

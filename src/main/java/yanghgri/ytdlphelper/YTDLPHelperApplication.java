@@ -47,7 +47,7 @@ public class YTDLPHelperApplication {
         }
 
         switch (mode) {
-            case "getKeys":
+            case "keys":
                 outputSupportKeysName(properties);
                 break;
             case "init":
@@ -65,17 +65,20 @@ public class YTDLPHelperApplication {
             case "del":
                 File delTarget = new File(application.getUrlList());
                 String url = application.getUrl();
-                String playListID = application.getPlayListID();
-                String playListCount = application.getPlayListCount();
-                String playListIndex = application.getPlayListIndex();
-                Playlist playlist = new Playlist(playListID, playListCount, playListIndex);
+                Playlist playlist = new Playlist(application.getPlayListID(), application.getPlayListCount(), application.getPlayListIndex());
+                //将NA替换为null
                 setNAToNull(playlist);
-                if (isInPlayList(playListID, playListCount, playListIndex)) {
-                    if (isLastInPlayList(playListCount, playListIndex)) {
+                String playlistID = playlist.getPlaylistID();
+                String playlistCount = playlist.getPlaylistCount();
+                String playlistIndex = playlist.getPlaylistIndex();
+                if (isInPlayList(playlistID, playlistCount, playlistIndex)) {
+                    if (isLastInPlayList(playlistCount, playlistIndex)) {
                         FileOperator.deleteByURL(delTarget, url);
+                        System.out.println("\n已删除合集链接：" + url + "\n");
                     }
                 } else {
                     FileOperator.deleteByURL(delTarget, url);
+                    System.out.println("\n已删除链接：" + url + "\n");
                 }
                 break;
             default:

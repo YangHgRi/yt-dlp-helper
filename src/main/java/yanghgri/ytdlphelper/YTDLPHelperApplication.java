@@ -73,8 +73,8 @@ public class YTDLPHelperApplication {
                 String playlistIndex = playlist.getPlaylistIndex();
                 if (isInPlayList(playlistID, playlistCount, playlistIndex)) {
                     if (isLastInPlayList(playlistCount, playlistIndex)) {
-                        FileOperator.deleteByURL(delTarget, url);
-                        System.out.println("\n已删除合集链接：" + url + "\n");
+                        FileOperator.deleteByURL(delTarget, playlistID);
+                        System.out.println("\n已删除合集链接：" + playlistID + "\n");
                     }
                 } else {
                     FileOperator.deleteByURL(delTarget, url);

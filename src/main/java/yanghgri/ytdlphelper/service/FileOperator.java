@@ -2,7 +2,6 @@ package yanghgri.ytdlphelper.service;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,20 +33,6 @@ public class FileOperator {
     public static void writeByStringList(File path, List<String> newContent) {
         try (FileWriter fileWriter = new FileWriter(path); BufferedWriter writer = new BufferedWriter(fileWriter)) {
             writer.write(String.join("\n", newContent));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void deleteAll(File path) {
-        writeByStringList(path, Collections.emptyList());
-    }
-
-    public static void deleteFirstLine(File path) {
-        List<String> stringList = readAsStringList(path);
-        stringList.remove(0);
-        try (FileWriter fileWriter = new FileWriter(path); BufferedWriter writer = new BufferedWriter(fileWriter)) {
-            writer.write(String.join("\n", stringList));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

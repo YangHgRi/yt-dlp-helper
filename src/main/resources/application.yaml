@@ -4,3 +4,4 @@ spring:
     banner-mode: off
     # 关闭启动流程日志
     log-startup-info: false
+    lazy-initialization: true

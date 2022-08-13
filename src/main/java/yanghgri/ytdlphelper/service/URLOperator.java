@@ -1,11 +1,15 @@
 package yanghgri.ytdlphelper.service;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class URLOperator {
     private static final Pattern regexPattern = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()!@:%_+.~#?&/=]*)");
@@ -24,10 +28,25 @@ public class URLOperator {
             Matcher matcher = regexPattern.matcher(line);
 
             while (matcher.find()) {
-                newFileContent.add(matcher.group());
+                String url = escape(matcher.group());
+                newFileContent.add(url);
             }
         });
         //返回去重后的url
         return newFileContent.stream().distinct().collect(Collectors.toList());
+    }
+
+    public static String escape(String target) {
+        List<String> needToEscape = Stream.of("&").collect(Collectors.toList());
+        AtomicReference<String> result = new AtomicReference<>(target);
+        needToEscape.forEach(needEscape -> {
+            for (int i = 0; i < StringUtils.countMatches(target, needEscape); i++) {
+                int indexOfEscapeInOrdinal = StringUtils.ordinalIndexOf(result.get(), needEscape, i + 1);
+                if (result.get().charAt(indexOfEscapeInOrdinal - 1) != '^') {
+                    result.set(result.get().substring(0, indexOfEscapeInOrdinal) + "^" + needEscape + result.get().substring(indexOfEscapeInOrdinal + 1));
+                }
+            }
+        });
+        return result.get();
     }
 }

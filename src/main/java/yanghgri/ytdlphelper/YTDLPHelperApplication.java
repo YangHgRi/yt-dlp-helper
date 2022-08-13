@@ -82,7 +82,7 @@ public class YTDLPHelperApplication {
                 }
                 break;
             default:
-                throw new IllegalArgumentException("参数m目前只支持getKeys/init/del！");
+                throw new IllegalArgumentException("参数m目前只支持keys/init/del！");
         }
     }
 

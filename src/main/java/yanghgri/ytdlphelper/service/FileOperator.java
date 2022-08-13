@@ -39,8 +39,10 @@ public class FileOperator {
     }
 
     public static void deleteByURL(File path, String targetURL) {
+        targetURL = URLOperator.escape(targetURL);
         List<String> stringList = readAsStringList(path);
-        stringList = stringList.stream().filter(s -> !s.contains(targetURL)).collect(Collectors.toList());
+        String finalTargetURL = targetURL;
+        stringList = stringList.stream().filter(s -> !s.contains(finalTargetURL)).collect(Collectors.toList());
         writeByStringList(path, stringList);
     }
 }

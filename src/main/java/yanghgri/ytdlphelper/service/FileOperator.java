@@ -39,10 +39,25 @@ public class FileOperator {
     }
 
     public static void deleteByURL(File path, String targetURL) {
-        targetURL = URLOperator.escape(targetURL);
         List<String> stringList = readAsStringList(path);
-        String finalTargetURL = targetURL;
+        String finalTargetURL = URLOperator.escape(targetURL);
+        int originalSize = stringList.size();
         stringList = stringList.stream().filter(s -> !s.contains(finalTargetURL)).collect(Collectors.toList());
-        writeByStringList(path, stringList);
+        int nowSize = stringList.size();
+        if (originalSize == nowSize) {
+            deleteFirstLine(path);
+        } else {
+            writeByStringList(path, stringList);
+        }
+    }
+
+    public static void deleteFirstLine(File path) {
+        List<String> newContent = readAsStringList(path);
+        newContent.remove(0);
+        try (FileWriter fileWriter = new FileWriter(path); BufferedWriter writer = new BufferedWriter(fileWriter)) {
+            writer.write(String.join("\n", newContent));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

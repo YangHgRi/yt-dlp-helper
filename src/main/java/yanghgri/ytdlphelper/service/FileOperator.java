@@ -60,4 +60,11 @@ public class FileOperator {
             throw new RuntimeException(e);
         }
     }
+
+    public static void deleteAll(File path) throws IOException {
+        FileWriter fileWriter = new FileWriter(path);
+        BufferedWriter writer = new BufferedWriter(fileWriter);
+        fileWriter.close();
+        writer.close();
+    }
 }

@@ -27,14 +27,6 @@ public class YTDLPHelperApplication {
     private String urlList;
     @Value("${t:#{null}}")
     private String ordinal;
-    @Value("${url:#{null}}")
-    private String url;
-    @Value("${listID:#{null}}")
-    private String playListID;
-    @Value("${listCount:#{null}}")
-    private String playListCount;
-    @Value("${listIndex:#{null}}")
-    private String playListIndex;
 
     public static void main(String[] args) throws IOException {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(YTDLPHelperApplication.class, args);

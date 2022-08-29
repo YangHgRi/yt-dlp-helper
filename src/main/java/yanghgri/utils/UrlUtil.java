@@ -1,4 +1,4 @@
-package yanghgri.ytdlphelper.service;
+package yanghgri.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class URLOperator {
+public class UrlUtil {
     private static final Pattern regexPattern = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()!@:%_+.~#?&/=]*)");
 
     /**
@@ -20,7 +20,7 @@ public class URLOperator {
      * @param path 路径
      */
     public static List<String> extract(File path) {
-        List<String> originalFileContent = FileOperator.readAsStringList(path);
+        List<String> originalFileContent = FileUtil.readAsStringList(path);
 
         List<String> newFileContent = new ArrayList<>();
         //模式判断，提取url
@@ -36,6 +36,12 @@ public class URLOperator {
         return newFileContent.stream().distinct().collect(Collectors.toList());
     }
 
+    /**
+     * 转义url中特殊字符
+     *
+     * @param target 目标
+     * @return {@link String}
+     */
     public static String escape(String target) {
         List<String> needToEscape = Stream.of("&").collect(Collectors.toList());
         AtomicReference<String> result = new AtomicReference<>(target);

@@ -25,7 +25,7 @@ public class MessageOutput {
                     System.out.print("\r");
                     System.out.print(line);
                 }
-            } else if (line.startsWith("[DL")) {
+            } else if (line.startsWith("[DL") || line.startsWith("[#")) {
                 System.out.print("\r");
                 System.out.print(line);
             } else {

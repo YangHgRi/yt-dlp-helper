@@ -3,6 +3,7 @@ package yanghgri;
 import yanghgri.model.ConfigProperties;
 import yanghgri.model.Key;
 import yanghgri.service.ConfigLoader;
+import yanghgri.service.FileCleaner;
 import yanghgri.utils.FileUtil;
 import yanghgri.utils.UrlUtil;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import static yanghgri.service.Executor.buildCommandList;
 import static yanghgri.service.Executor.startProcess;
@@ -34,6 +36,11 @@ public class Application {
             Key targetKey = null;
             if (targetKeyIndex.startsWith("D")) {
                 deleteAllMode(targetKeyIndex, keyList);
+                skip = true;
+            } else if (targetKeyIndex.equals("CLS")) {
+                List<String> workDirList = keyList.stream().map(Key::getWorkDir).distinct().collect(Collectors.toList());
+                FileCleaner cleaner = new FileCleaner(workDirList, properties.getLegalSuffixList(), properties.getIllegalSuffixList());
+                cleaner.clean();
                 skip = true;
             } else if (Integer.parseInt(targetKeyIndex) >= keyList.size()) {
                 System.out.println("\n" + "输入关键字序号超出现有范围！" + "\n");

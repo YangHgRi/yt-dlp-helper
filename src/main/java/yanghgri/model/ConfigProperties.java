@@ -12,4 +12,10 @@ public class ConfigProperties {
 
     @JsonProperty
     private List<Key> keyList;
+
+    @JsonProperty
+    private List<String> legalSuffixList;
+
+    @JsonProperty
+    private List<String> illegalSuffixList;
 }

@@ -33,11 +33,7 @@ public class Application {
 
             Key targetKey = null;
             if (targetKeyIndex.startsWith("D")) {
-                targetKeyIndex = targetKeyIndex.substring(1);
-                targetKey = keyList.get(Integer.parseInt(targetKeyIndex));
-                String urlListPath = targetKey.getUrlListPath();
-                FileUtil.deleteAll(new File(urlListPath));
-                System.out.print("\n" + urlListPath + "已清空！\n");
+                deleteAllMode(targetKeyIndex, keyList);
                 skip = true;
             } else if (Integer.parseInt(targetKeyIndex) >= keyList.size()) {
                 System.out.println("\n" + "输入关键字序号超出现有范围！" + "\n");
@@ -47,17 +43,29 @@ public class Application {
                 skip = false;
             }
             if (!skip) {
-                String keyName = targetKey.getName();
-                String urlListPath = targetKey.getUrlListPath();
-                String workDir = targetKey.getWorkDir();
-
-                FileUtil.writeByStringList(new File(urlListPath), UrlUtil.extract(new File(urlListPath)));
-                List<String> commandList = buildCommandList(urlListPath, configLocation, keyName.endsWith("_audio"));
-                startProcess(workDir, commandList);
+                execute(targetKey, configLocation);
             }
             System.out.println("\n再来一次？输入1确认");
             String retry = new Scanner(System.in).nextLine();
             loop = retry.equals("1");
         } while (loop);
+    }
+
+    public static void execute(Key targetKey, String configLocation) throws IOException, InterruptedException {
+        String keyName = targetKey.getName();
+        String urlListPath = targetKey.getUrlListPath();
+        String workDir = targetKey.getWorkDir();
+
+        FileUtil.writeByStringList(new File(urlListPath), UrlUtil.extract(new File(urlListPath)));
+        List<String> commandList = buildCommandList(urlListPath, configLocation, keyName.endsWith("_audio"));
+        startProcess(workDir, commandList);
+    }
+
+    public static void deleteAllMode(String targetKeyIndex, List<Key> keyList) throws IOException {
+        targetKeyIndex = targetKeyIndex.substring(1);
+        Key targetKey = keyList.get(Integer.parseInt(targetKeyIndex));
+        String urlListPath = targetKey.getUrlListPath();
+        FileUtil.deleteAll(new File(urlListPath));
+        System.out.print("\n" + urlListPath + "已清空！\n");
     }
 }

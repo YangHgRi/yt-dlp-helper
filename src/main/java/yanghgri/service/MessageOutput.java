@@ -1,5 +1,6 @@
 package yanghgri.service;
 
+import org.apache.commons.lang3.StringUtils;
 import yanghgri.model.Key;
 
 import java.io.BufferedReader;
@@ -14,6 +15,9 @@ public class MessageOutput {
         BufferedReader br = new BufferedReader(new InputStreamReader(input));
         String line;
         while ((line = br.readLine()) != null) {
+            if (StringUtils.isBlank(line)) {
+                continue;
+            }
             if (line.startsWith("[download]")) {
                 if (line.startsWith("[download] Resuming")) {
                     System.out.println(line);
@@ -23,6 +27,9 @@ public class MessageOutput {
                     System.out.print("\r");
                     System.out.print(line);
                 }
+            } else if (line.startsWith("[DL")) {
+                System.out.print("\r");
+                System.out.print(line);
             } else {
                 System.out.println(line);
             }

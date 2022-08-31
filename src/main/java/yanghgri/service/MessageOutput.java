@@ -19,9 +19,7 @@ public class MessageOutput {
                 continue;
             }
             if (line.startsWith("[download]")) {
-                if (line.startsWith("[download] Resuming")) {
-                    System.out.println(line);
-                } else if (line.startsWith("[download] Destination")) {
+                if (line.startsWith("[download] Resuming") || line.startsWith("[download] Destination")) {
                     System.out.println(line);
                 } else {
                     System.out.print("\r");

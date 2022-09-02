@@ -1,5 +1,6 @@
 package yanghgri;
 
+import org.apache.commons.lang3.StringUtils;
 import yanghgri.model.ConfigProperties;
 import yanghgri.model.Key;
 import yanghgri.service.ConfigLoader;
@@ -25,14 +26,11 @@ public class Application {
         List<Key> keyList = properties.getKeyList();
         String configLocation = properties.getConfigLocation();
 
-        boolean loop;
         boolean skip;
+        Scanner scanner = new Scanner(System.in);
+        outputSupportKeysName(keyList);
+        String targetKeyIndex = scanner.nextLine();
         do {
-            outputSupportKeysName(keyList);
-
-            Scanner scanner = new Scanner(System.in);
-            String targetKeyIndex = scanner.nextLine();
-
             Key targetKey = null;
             if (targetKeyIndex.startsWith("D")) {
                 deleteAllMode(targetKeyIndex, keyList);
@@ -52,10 +50,9 @@ public class Application {
             if (!skip) {
                 execute(targetKey, configLocation);
             }
-            System.out.println("\n再来一次？输入1确认");
-            String retry = new Scanner(System.in).nextLine();
-            loop = retry.equals("1");
-        } while (loop);
+            outputSupportKeysName(keyList);
+            targetKeyIndex = scanner.nextLine();
+        } while (StringUtils.isNoneBlank(targetKeyIndex));
     }
 
     public static void execute(Key targetKey, String configLocation) throws IOException, InterruptedException {

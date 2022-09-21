@@ -19,7 +19,14 @@ import static yanghgri.service.Executor.buildCommandList;
 import static yanghgri.service.Executor.startProcess;
 import static yanghgri.service.MessageOutput.outputSupportKeysName;
 
+/**
+ * @author YangHgRi
+ */
 public class Application {
+    public static final String DELETE_FLAG = "D";
+
+    public static final String CLEAN_FLAG = "CLS";
+
     public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
         ConfigLoader parser = new ConfigLoader();
         ConfigProperties properties = parser.load();
@@ -32,10 +39,10 @@ public class Application {
         String targetKeyIndex = scanner.nextLine();
         do {
             Key targetKey = null;
-            if (targetKeyIndex.startsWith("D")) {
+            if (targetKeyIndex.startsWith(DELETE_FLAG)) {
                 deleteAllMode(targetKeyIndex, keyList);
                 skip = true;
-            } else if (targetKeyIndex.equals("CLS")) {
+            } else if (CLEAN_FLAG.equals(targetKeyIndex)) {
                 List<String> workDirList = keyList.stream().map(Key::getWorkDir).distinct().collect(Collectors.toList());
                 FileCleaner cleaner = new FileCleaner(workDirList, properties.getLegalSuffixList(), properties.getIllegalSuffixList());
                 cleaner.clean();

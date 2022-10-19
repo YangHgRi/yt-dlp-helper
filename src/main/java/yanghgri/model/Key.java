@@ -3,6 +3,9 @@ package yanghgri.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+/**
+ * @author YangHgRi
+ */
 @Data
 public class Key {
     @JsonProperty

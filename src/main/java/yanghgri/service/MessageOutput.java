@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author YangHgRi
+ */
 public class MessageOutput {
     public static void outputMessage(InputStream input) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(input));

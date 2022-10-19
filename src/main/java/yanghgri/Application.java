@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import yanghgri.model.ConfigProperties;
 import yanghgri.model.Key;
 import yanghgri.service.ConfigLoader;
-import yanghgri.service.FileCleaner;
 import yanghgri.utils.FileUtil;
 import yanghgri.utils.UrlUtil;
 
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import static yanghgri.service.Executor.buildCommandList;
 import static yanghgri.service.Executor.startProcess;
@@ -25,7 +23,7 @@ import static yanghgri.service.MessageOutput.outputSupportKeysName;
 public class Application {
     public static final String DELETE_FLAG = "D";
 
-    public static final String CLEAN_FLAG = "CLS";
+    public static final String INSERT_FLAG = "I";
 
     public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
         ConfigLoader parser = new ConfigLoader();
@@ -41,11 +39,6 @@ public class Application {
             Key targetKey = null;
             if (targetKeyIndex.startsWith(DELETE_FLAG)) {
                 deleteAllMode(targetKeyIndex, keyList);
-                skip = true;
-            } else if (CLEAN_FLAG.equals(targetKeyIndex)) {
-                List<String> workDirList = keyList.stream().map(Key::getWorkDir).distinct().collect(Collectors.toList());
-                FileCleaner cleaner = new FileCleaner(workDirList, properties.getLegalSuffixList(), properties.getIllegalSuffixList());
-                cleaner.clean();
                 skip = true;
             } else if (Integer.parseInt(targetKeyIndex) >= keyList.size()) {
                 System.out.println("\n" + "输入关键字序号超出现有范围！" + "\n");

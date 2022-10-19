@@ -11,8 +11,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @author YangHgRi
+ */
 public class UrlUtil {
-    private static final Pattern regexPattern = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()!@:%_+.~#?&/=]*)");
+    private static final Pattern REGEX_PATTERN = Pattern.compile("https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()!@:%_+.~#?&/=]*)");
 
     /**
      * 读取文件内容，提取其中的url，组成url集合，返回给调用方
@@ -25,7 +28,7 @@ public class UrlUtil {
         List<String> newFileContent = new ArrayList<>();
         //模式判断，提取url
         originalFileContent.forEach(line -> {
-            Matcher matcher = regexPattern.matcher(line);
+            Matcher matcher = REGEX_PATTERN.matcher(line);
 
             while (matcher.find()) {
                 String url = escape(matcher.group());

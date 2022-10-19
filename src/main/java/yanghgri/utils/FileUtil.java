@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author YangHgRi
+ */
 public class FileUtil {
     /**
      * 读取原始文件内容，组成字符串集合后返回
@@ -13,11 +16,11 @@ public class FileUtil {
      */
     public static List<String> readAsStringList(File path) {
         try (FileReader fileReader = new FileReader(path); BufferedReader reader = new BufferedReader(fileReader)) {
-            List<String> originalURLList = new ArrayList<>();
+            List<String> originalUrlList = new ArrayList<>();
             reader.lines().forEach(
-                    originalURLList::add
+                    originalUrlList::add
             );
-            return originalURLList;
+            return originalUrlList;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

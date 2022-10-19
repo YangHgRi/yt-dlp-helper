@@ -7,6 +7,9 @@ import java.util.List;
 
 import static yanghgri.service.MessageOutput.outputMessage;
 
+/**
+ * @author YangHgRi
+ */
 public class Executor {
     public static int startProcess(String workDir, List<String> commandList) throws IOException, InterruptedException {
         System.out.println();

@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+/**
+ * @author YangHgRi
+ */
 public class ConfigLoader {
     public String getCurrentJarPath() throws URISyntaxException {
         String configPath = new File(Application.class.getProtectionDomain().getCodeSource().getLocation()

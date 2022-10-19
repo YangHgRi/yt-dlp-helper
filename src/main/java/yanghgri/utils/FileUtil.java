@@ -52,4 +52,12 @@ public class FileUtil {
         fileWriter.close();
         writer.close();
     }
+
+    public static void insertUrlAtTheEnd(File path, String url) {
+        try (FileWriter fileWriter = new FileWriter(path, true); BufferedWriter writer = new BufferedWriter(fileWriter)) {
+            writer.write("\n" + url + "\n");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

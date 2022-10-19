@@ -40,8 +40,11 @@ public class Application {
             if (targetKeyIndex.startsWith(DELETE_FLAG)) {
                 deleteAllMode(targetKeyIndex, keyList);
                 skip = true;
+            } else if (targetKeyIndex.startsWith(INSERT_FLAG)) {
+                insertUrlMode(targetKeyIndex, keyList);
+                skip = true;
             } else if (Integer.parseInt(targetKeyIndex) >= keyList.size()) {
-                System.out.println("\n" + "输入关键字序号超出现有范围！" + "\n");
+                System.out.println("\n输入关键字序号超出现有范围！\n");
                 skip = true;
             } else {
                 targetKey = keyList.get(Integer.parseInt(targetKeyIndex));
@@ -59,17 +62,25 @@ public class Application {
         String keyName = targetKey.getName();
         String urlListPath = targetKey.getUrlListPath();
         String workDir = targetKey.getWorkDir();
-
         FileUtil.writeByStringList(new File(urlListPath), UrlUtil.extract(new File(urlListPath)));
         List<String> commandList = buildCommandList(urlListPath, configLocation, keyName.endsWith("_audio"));
         startProcess(workDir, commandList);
     }
 
+    public static void insertUrlMode(String targetKeyIndex, List<Key> keyList) {
+        String url = targetKeyIndex.substring(2);
+        targetKeyIndex = targetKeyIndex.substring(1, 2).toUpperCase();
+        Key targetKey = keyList.get(Integer.parseInt(targetKeyIndex));
+        String urlListPath = targetKey.getUrlListPath();
+        FileUtil.insertUrlAtTheEnd(new File(urlListPath), url);
+        System.out.printf("\n链接 [%s] 已插入到：%s\n", url, urlListPath);
+    }
+
     public static void deleteAllMode(String targetKeyIndex, List<Key> keyList) throws IOException {
-        targetKeyIndex = targetKeyIndex.substring(1);
+        targetKeyIndex = targetKeyIndex.substring(1, 2).toUpperCase();
         Key targetKey = keyList.get(Integer.parseInt(targetKeyIndex));
         String urlListPath = targetKey.getUrlListPath();
         FileUtil.deleteAll(new File(urlListPath));
-        System.out.print("\n" + urlListPath + "已清空！\n");
+        System.out.printf("\n%s已清空！\n", urlListPath);
     }
 }

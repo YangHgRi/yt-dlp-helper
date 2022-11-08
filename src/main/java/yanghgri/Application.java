@@ -10,6 +10,7 @@ import yanghgri.utils.UrlUtil;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,11 +26,26 @@ public class Application {
 
     public static final String INSERT_FLAG = "I";
 
+    public static final String PRE_DEFINE_ORDINAL_FLAG = "O";
+
     public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
         ConfigLoader parser = new ConfigLoader();
         ConfigProperties properties = parser.load();
         List<Key> keyList = properties.getKeyList();
         String configLocation = properties.getConfigLocation();
+        List<String> argList = Arrays.asList(args);
+
+        // 如果有Ox参数，直接下载
+        argList.forEach(arg -> {
+            if (arg.startsWith(PRE_DEFINE_ORDINAL_FLAG)) {
+                try {
+                    execute(keyList.get(Integer.parseInt(arg.substring(1))), configLocation);
+                    System.exit(1);
+                } catch (IOException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         boolean skip;
         Scanner scanner = new Scanner(System.in);
